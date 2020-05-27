@@ -1,13 +1,65 @@
 //Just like in python, class created with "class className", but now use curly braces instead of colon as in JS
 console.log("Player linked in")
 
-class Player {
-  constructor(health, damage, x, y, outsideID){
+var types = {
+    "enemy":"enemy-ship.png",
+    "player":"spaceship.png"
+}
+function randomInt(min, max){
+return(Math.floor(Math.random()*(max-min))+ min)
+}
+
+class Entity{
+  constructor(type, health, damage, x, y, id){
+
+    this.type = type
     this.health = health
     this.damage = damage
     this.x = x
     this.y = y
-    this.element = document.getElementById(outsideID)
+
+
+    if(id){
+    this.element = document.getElementById(id)
+    }
+    else{
+      this.element = this.initElement()
+    }
+
+
+  }
+
+initElement(){
+var element = document.createElement("div")
+element.classList.add("ship")
+element.innerHTML = ('<img src="'+ types[this.type]+ '" class="spaceShip"/>')
+document.getElementById("gameMap").append(element)
+return element
+}
+
+draw(){
+  this.element.style.transform = ("translate(" + this.x + "px, " + this.y + "px)")
+}
+setNewCoords(x, y){
+  this.x = x
+  this.y = y
+}
+
+
+
+
+
+
+}
+
+
+
+
+
+class Player extends Entity {
+  constructor(health, damage, x, y, id){
+    super("player", health, damage, x, y, id)
+
 
      this.timerID={
       "w":-1,
@@ -24,9 +76,7 @@ class Player {
 
 
   }
-draw(){
-    this.element.style.transform =("translate(" + this.x +"px, " + this.y +"px)")
-}
+
 
 
 shoot(){
@@ -85,7 +135,33 @@ keyUp(e){
 
 }
 
+class Enemy extends Entity {
+  constructor(health, damage, x, y, id){
+  super("enemy", health, damage, x, y, id)
+let self = this
 
+  self.moveTimer = setInterval(() => this.randomMove() , 439)
+}
+
+
+randomMove(){
+  this.setNewCoords(this.x + randomInt(-3, 3), this.y + randomInt(-3, 3))
+  this.draw()
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+}
 
 
 
