@@ -10,22 +10,27 @@ return(Math.floor(Math.random()*(max-min))+ min)
 }
 
 class Entity{
-  constructor(type, health, damage, x, y, id){
+  constructor(type, health, damage, x, y, outline ,id){
 
     this.type = type
     this.health = health
     this.damage = damage
     this.x = x
     this.y = y
-
-
+    this.outline = outline
+    this.speed = 4
+    this.width = 110
+    this.height = 128
+    this.invinciblity = false
+    this.iDuration = 1000
+    this.maxHealth = health
     if(id){
     this.element = document.getElementById(id)
     }
     else{
       this.element = this.initElement()
     }
-
+    this.draw()
 
   }
 
@@ -44,11 +49,38 @@ setNewCoords(x, y){
   this.x = x
   this.y = y
 }
-
-
-
-
-
+getHitbox(){
+  return{
+    leftX:this.x,
+    rightX:this.x + this.width,
+    topY: this.y,
+    bottomY: this.y + this.height
+  }
+}
+isColliding(other){
+  let myHb = this.getHitbox()
+  let otherHb = other.getHitbox()
+  return(myHb.leftX < otherHb.rightX && myHb.rightX > otherHb.leftX &&
+  myHb.topY < otherHb.bottomY && myHb.bottomY > otherHb.topY)
+}
+isInvincible(){
+return this.invinciblity
+}
+setInvincible(parameter){
+this.invinciblity = parameter
+}
+onCollide(other){
+if(!this.invinciblity){ this.health -= other.damage
+this.setInvincible(true)
+setTimeout(()=> this.setInvincible(false), this.iDuration)
+console.log("Health: " + this.health)}
+this.updateHealthBar()
+}
+updateHealthBar(){
+var healthBar = document.getElementById(this.healthSliderID)
+healthBar.style.width = ((this.health/this.maxHealth) * 100) + "%"
+if(this.health < 0){healthBar.style.width = (0 + "%")}
+}
 
 }
 
@@ -57,10 +89,11 @@ setNewCoords(x, y){
 
 
 class Player extends Entity {
-  constructor(health, damage, x, y, id){
-    super("player", health, damage, x, y, id)
-
-
+  constructor(health, damage, x, y, outline, id){
+    super("player", health, damage, x, y, outline, id)
+    this.defaultSpeed = 4
+    this.canDash = true
+    this.healthSliderID = "playerHealthSlider"
      this.timerID={
       "w":-1,
       's':-1,
@@ -71,7 +104,8 @@ class Player extends Entity {
       "w":true,
       "s":true,
       "a":true,
-      "d":true
+      "d":true,
+      " ":true
     }
 
 
@@ -89,32 +123,38 @@ let self = this
   }
   if(e.key == "w"){
     this.timerID["w"] = setInterval(function(){
-     self.y -= 2
-     self.draw()
+     self.y -= self.speed
+
 
     },45 )
   }
   if(e.key == "s"){
     this.timerID["s"] = setInterval(function(){
-      self.y += 2
-      self.draw()
+      self.y += self.speed
+
 
     }, 45)
   }
   if(e.key == "a"){
     this.timerID["a"]= setInterval(function(){
-  self.x -= 2
-  self.draw()
+  self.x -= self.speed
+
 
 
     }, 45)
   }
   if(e.key == "d"){
     this.timerID["d"]= setInterval(function(){
-  self.x += 2
-  self.draw()
+  self.x += self.speed
+
 
    }, 45)
+  }
+  if(e.key == " " && self.canDash){
+    self.speed = 20
+    self.canDash = false
+    setTimeout(()=> self.speed = this.defaultSpeed, 250)
+    setTimeout(()=> self.canDash = true, 2500)
   }
 
   this.keyAllowed[e.key]= false
@@ -136,27 +176,41 @@ keyUp(e){
 }
 
 class Enemy extends Entity {
-  constructor(health, damage, x, y, id){
-  super("enemy", health, damage, x, y, id)
+  constructor(health, damage, x, y, outline, id){
+  super("enemy", health, damage, x, y, outline, id)
 let self = this
-
-  self.moveTimer = setInterval(() => this.randomMove() , 439)
+this.target = [this.x, this.y]
+  self.moveTimer = setInterval(() => this.randomMove() , 50)
 }
 
 
 randomMove(){
-  this.setNewCoords(this.x + randomInt(-3, 3), this.y + randomInt(-3, 3))
-  this.draw()
+  if(this.atTarget()){
+    this.speed = randomInt(2, 20)
+    this.randomTarget()}
+  this.nextPosition()
+
 
 }
-
-
-
-
-
-
-
-
+atTarget(){
+return (Math.abs(this.x - this.target[0])<this.speed && Math.abs(this.y - this.target[1])<this.speed)
+}
+setTarget(x, y){
+  this.target[0] = x
+  this.target[1] = y
+}
+randomTarget(){
+let x = randomInt(0, this.outline[0])
+let y = randomInt(0, this.outline[1])
+this.setTarget(x, y)
+}
+nextPosition(){
+let displacement = [this.target[0] - this.x, this.target[1] - this.y]
+let magnitude = Math.sqrt(displacement[0]*displacement[0] + displacement[1]*displacement[1] )
+let direction = [displacement[0]/magnitude, displacement[1]/magnitude]
+this.x += Math.ceil(direction[0]* this.speed)
+this.y += Math.ceil(direction[1]* this.speed)
+}
 
 
 
