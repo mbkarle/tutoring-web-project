@@ -8,6 +8,9 @@ var types = {
 function randomInt(min, max){
 return(Math.floor(Math.random()*(max-min))+ min)
 }
+function radians(degrees){
+  return Math.PI * degrees / 180
+}
 
 class Entity{
   constructor(type, health, damage, x, y, outline ,id){
@@ -18,12 +21,14 @@ class Entity{
     this.x = x
     this.y = y
     this.outline = outline
-    this.speed = 4
+    this.speed = 6
     this.width = 110
     this.height = 128
     this.invinciblity = false
     this.iDuration = 1000
     this.maxHealth = health
+    this.rotation = 0
+    this.rotationSpeed = 5
     if(id){
     this.element = document.getElementById(id)
     }
@@ -43,7 +48,10 @@ return element
 }
 
 draw(){
-  this.element.style.transform = ("translate(" + this.x + "px, " + this.y + "px)")
+var move = ("translate(" + this.x + "px, " + this.y + "px) rotate(" + this.rotation +"deg)")
+ this.element.style.transform = move
+
+
 }
 setNewCoords(x, y){
   this.x = x
@@ -91,7 +99,7 @@ if(this.health < 0){healthBar.style.width = (0 + "%")}
 class Player extends Entity {
   constructor(health, damage, x, y, outline, id){
     super("player", health, damage, x, y, outline, id)
-    this.defaultSpeed = 4
+    this.defaultSpeed = this.speed
     this.canDash = true
     this.healthSliderID = "playerHealthSlider"
      this.timerID={
@@ -123,21 +131,23 @@ let self = this
   }
   if(e.key == "w"){
     this.timerID["w"] = setInterval(function(){
-     self.y -= self.speed
+     self.y-= self.speed * Math.cos(radians(self.rotation))
+     self.x += self.speed * Math.sin(radians(self.rotation))
 
 
     },45 )
   }
   if(e.key == "s"){
     this.timerID["s"] = setInterval(function(){
-      self.y += self.speed
+      self.y += self.speed * Math.cos(radians(self.rotation))
+      self.x -= self.speed * Math.sin(radians(self.rotation))
 
 
     }, 45)
   }
   if(e.key == "a"){
     this.timerID["a"]= setInterval(function(){
-  self.x -= self.speed
+   self.rotation -= self.rotationSpeed
 
 
 
@@ -145,13 +155,13 @@ let self = this
   }
   if(e.key == "d"){
     this.timerID["d"]= setInterval(function(){
-  self.x += self.speed
+   self.rotation += self.rotationSpeed
 
 
    }, 45)
   }
   if(e.key == " " && self.canDash){
-    self.speed = 20
+    self.speed = 25
     self.canDash = false
     setTimeout(()=> self.speed = this.defaultSpeed, 250)
     setTimeout(()=> self.canDash = true, 2500)
