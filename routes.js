@@ -8,9 +8,9 @@ const path = require('path');
 /*----------Export File----------*/
 module.exports = function(app) {
 
-    app.route('/')
+    app.route('/game')
         .get(home); //user has accessed homepage
-    app.route("/home")
+    app.route("/")
         .get((req, res) => {
           res.redirect("./home.html")
         });
