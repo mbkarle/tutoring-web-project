@@ -26,7 +26,7 @@ body, .map {
 
 
 
-.player, .ship{
+.player, .ship, .starSet{
  position: absolute;
  top: 0px ;
  left:  0px ;
@@ -82,4 +82,45 @@ footer {
 
 .homeButton {
   color: #cfcfcf;
+}
+
+
+
+.title{
+  color: #fff;
+  margin: 30px auto;
+  width: fit-content;
+  font-size: 56pt;
+}
+
+
+
+.button{
+ background-color:rgb(230, 0, 0);
+ border-style: solid;
+ border-color:#ccc;
+ border-width: 2px;
+ border-radius: 300px;
+ padding: 25px;
+ margin: 60px auto;
+ position: relative;
+ width:150px;
+ height:150px;
+ display:flex;
+ align-items:center;
+ justify-content: center;
+ user-select:none;
+}
+.button:active{
+ box-shadow: inset 0px 0px 15px #ccc;
+
+}
+
+
+.buttonText{
+color: #fff;
+font-size: 28px;
+flex:1;
+text-align: center;
+
 }
