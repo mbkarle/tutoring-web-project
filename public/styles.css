@@ -69,3 +69,17 @@ top: 0px;
 left: 0px;
 background-color: rgba(230, 0, 0, 0.8)
 }
+
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  color: white;
+  text-align: center;
+  padding-bottom: 15px;
+}
+
+.homeButton {
+  color: #cfcfcf;
+}

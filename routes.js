@@ -10,6 +10,10 @@ module.exports = function(app) {
 
     app.route('/')
         .get(home); //user has accessed homepage
+    app.route("/home")
+        .get((req, res) => {
+          res.redirect("./home.html")
+        });
 
 }
 
