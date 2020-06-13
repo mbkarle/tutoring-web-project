@@ -22,13 +22,14 @@ class Entity{
     this.y = y
     this.outline = outline
     this.speed = 6
-    this.width = 110
-    this.height = 128
+    this.width = 100
+    this.height = 110
     this.invinciblity = false
     this.iDuration = 1000
     this.maxHealth = health
     this.rotation = 0
     this.rotationSpeed = 5
+    this.isAlive = true
     if(id){
     this.element = document.getElementById(id)
     }
@@ -86,9 +87,21 @@ this.updateHealthBar()
 }
 updateHealthBar(){
 var healthBar = document.getElementById(this.healthSliderID)
+var map = document.getElementById("gameMap")
 healthBar.style.width = ((this.health/this.maxHealth) * 100) + "%"
-if(this.health < 0){healthBar.style.width = (0 + "%")}
+if(this.health < 0){
+  healthBar.style.width = (0 + "%")
+  map.style.backgroundColor = ("black")
+  this.onDeath()
+  setTimeout(()=> window.location.href = "/", 2000)
 }
+}
+onDeath(){
+  this.isAlive = false
+
+  }
+
+
 
 }
 
@@ -118,14 +131,22 @@ class Player extends Entity {
 
 
   }
-
+onDeath(){
+  super.onDeath()
+  for(var i in this.timerID){
+    clearInterval(this.timerID[i])}
+  var game = document.getElementById("game")
+  var death = document.getElementById("death")
+  game.style.display = "none"
+  death.style.display = "flex"
+}
 
 
 shoot(){
 
 }
 keyPress(e){
-let self = this
+if(this.isAlive){let self = this
   if(!this.keyAllowed[e.key]){
     return
   }
@@ -167,7 +188,7 @@ let self = this
     setTimeout(()=> self.canDash = true, 2500)
   }
 
-  this.keyAllowed[e.key]= false
+  this.keyAllowed[e.key]= false}
 
 
 
