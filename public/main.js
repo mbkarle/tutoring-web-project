@@ -14,13 +14,10 @@ var height =window.innerHeight
 }
 
 function startGame(){
-  var width  = window.innerWidth
-  var height =window.innerHeight
-  var outerBounds = [width, height]
-  var player = new Player(100, 25, 0, 0, outerBounds, "player" )
+  var player = new Player(100, 25, 0, 0, "player" )
   let entities = [player]
   for(var i = 0; i < 3; i ++){
-    entities.push(new Enemy(50, 30, randomInt(100, 700), randomInt(100, 700), outerBounds))
+    entities.push(new Enemy(50, 30, randomInt(100, 700), randomInt(100, 700)))
   }
 document.addEventListener("keydown", function(e){player.keyPress(e)})
 

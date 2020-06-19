@@ -1,77 +1,30 @@
 //Just like in python, class created with "class className", but now use curly braces instead of colon as in JS
-console.log("Player linked in")
 
-var types = {
-    "enemy":"enemy-ship.png",
-    "player":"spaceship.png"
-}
-function randomInt(min, max){
-return(Math.floor(Math.random()*(max-min))+ min)
-}
-function radians(degrees){
-  return Math.PI * degrees / 180
-}
-
-class Entity{
-  constructor(type, health, damage, x, y, outline ,id){
-
-    this.type = type
+class Entity extends Sprite{
+  constructor(type, health, damage, x, y, id){
+    super(100, 110, x, y, type, id)
     this.health = health
     this.damage = damage
-    this.x = x
-    this.y = y
-    this.outline = outline
     this.speed = 6
-    this.width = 100
-    this.height = 110
     this.invinciblity = false
     this.iDuration = 1000
+      // Keep at 1000 
     this.maxHealth = health
     this.rotation = 0
     this.rotationSpeed = 5
     this.isAlive = true
-    if(id){
-    this.element = document.getElementById(id)
-    }
-    else{
-      this.element = this.initElement()
-    }
-    this.draw()
-
   }
 
-initElement(){
-var element = document.createElement("div")
-element.classList.add("ship")
-element.innerHTML = ('<img src="'+ types[this.type]+ '" class="spaceShip"/>')
-document.getElementById("gameMap").append(element)
-return element
-}
-
-draw(){
-var move = ("translate(" + this.x + "px, " + this.y + "px) rotate(" + this.rotation +"deg)")
- this.element.style.transform = move
-
-
-}
-setNewCoords(x, y){
-  this.x = x
-  this.y = y
-}
-getHitbox(){
-  return{
-    leftX:this.x,
-    rightX:this.x + this.width,
-    topY: this.y,
-    bottomY: this.y + this.height
+  delete(entities){
+    super.delete()
+    entities.splice( entities.indexOf(this)  , 1)
   }
-}
-isColliding(other){
-  let myHb = this.getHitbox()
-  let otherHb = other.getHitbox()
-  return(myHb.leftX < otherHb.rightX && myHb.rightX > otherHb.leftX &&
-  myHb.topY < otherHb.bottomY && myHb.bottomY > otherHb.topY)
-}
+
+
+
+
+
+
 isInvincible(){
 return this.invinciblity
 }
@@ -91,7 +44,7 @@ var map = document.getElementById("gameMap")
 healthBar.style.width = ((this.health/this.maxHealth) * 100) + "%"
 if(this.health < 0){
   healthBar.style.width = (0 + "%")
-  map.style.backgroundColor = ("black")
+// comment the two lines below this to play without a death screen
   this.onDeath()
   setTimeout(()=> window.location.href = "/", 2000)
 }
@@ -110,8 +63,8 @@ onDeath(){
 
 
 class Player extends Entity {
-  constructor(health, damage, x, y, outline, id){
-    super("player", health, damage, x, y, outline, id)
+  constructor(health, damage, x, y, id){
+    super("player", health, damage, x, y, id)
     this.defaultSpeed = this.speed
     this.canDash = true
     this.healthSliderID = "playerHealthSlider"
@@ -207,8 +160,8 @@ keyUp(e){
 }
 
 class Enemy extends Entity {
-  constructor(health, damage, x, y, outline, id){
-  super("enemy", health, damage, x, y, outline, id)
+  constructor(health, damage, x, y, id){
+  super("enemy", health, damage, x, y, id)
 let self = this
 this.target = [this.x, this.y]
   self.moveTimer = setInterval(() => this.randomMove() , 50)
@@ -231,8 +184,8 @@ setTarget(x, y){
   this.target[1] = y
 }
 randomTarget(){
-let x = randomInt(0, this.outline[0])
-let y = randomInt(0, this.outline[1])
+let x = randomInt(0, window.innerWidth)
+let y = randomInt(0, window.innerHeight)
 this.setTarget(x, y)
 }
 nextPosition(){
@@ -248,6 +201,32 @@ this.y += Math.ceil(direction[1]* this.speed)
 
 }
 
+
+
+
+
+class Laser extends Sprite{
+  constructor(damage, x, y,){
+    super(20, 10, x, y,"laser")
+
+      this.damage = damage
+
+
+  }
+
+
+
+onCollide(other){
+if(!other.invinciblity){ other.health -= this.damage
+other.setInvincible(true)
+setTimeout(()=> other.setInvincible(false), other.iDuration)
+console.log("Health: " + other.health)}
+other.updateHealthBar()
+}
+
+
+
+}
 
 
 
