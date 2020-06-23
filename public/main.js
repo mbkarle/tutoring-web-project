@@ -14,6 +14,7 @@ var height =window.innerHeight
 }
 
 function startGame(){
+  var portal = new Portal(140, 140, 600, 300)
   var player = new Player(100, 25, 0, 0, "player" )
   let entities = [player]
   for(var i = 0; i < 3; i ++){
@@ -31,6 +32,9 @@ if(entities[0].isColliding(entities[j])){
   player.onCollide(entities[j])
   console.log("is colliding")
 }
+}
+if(portal.isColliding(entities[0])){
+  portal.onCollide()
 }
 } , 50/3)
 

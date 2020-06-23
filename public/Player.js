@@ -2,17 +2,19 @@
 
 class Entity extends Sprite{
   constructor(type, health, damage, x, y, id){
-    super(100, 110, x, y, type, id)
+    super(110, 128, x, y, type, id)
     this.health = health
     this.damage = damage
     this.speed = 6
     this.invinciblity = false
     this.iDuration = 1000
-      // Keep at 1000 
+      // Keep at 1000 ^
     this.maxHealth = health
     this.rotation = 0
     this.rotationSpeed = 5
     this.isAlive = true
+    this.width = 100
+    this.height = 110
   }
 
   delete(entities){
@@ -165,6 +167,7 @@ class Enemy extends Entity {
 let self = this
 this.target = [this.x, this.y]
   self.moveTimer = setInterval(() => this.randomMove() , 50)
+
 }
 
 

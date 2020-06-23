@@ -9,6 +9,7 @@ function radians(degrees){
 var types = {
     "enemy":"enemy-ship.png",
     "player":"spaceship.png",
+    "portal":"Portal.png",
     "laser":" "
       }
 class Sprite{
@@ -30,16 +31,24 @@ class Sprite{
     this.draw()
   }
 
+
+
+
   initElement(){
   var element = document.createElement("div")
-  element.classList.add("ship")
-  element.innerHTML = ('<img src="images/'+ types[this.type]+ '" class="spaceShip"/>')
+  element.classList.add("sprite")
+  element.innerHTML = ('<img src="images/'+ types[this.type]+
+  '" style="width:'+ this.width+ 'px; height:'+ this.height +'px;" />')
   document.getElementById("gameMap").append(element)
   return element
   }
 
   draw(){
-  var move = ("translate(" + this.x + "px, " + this.y + "px) rotate(" + this.rotation +"deg)")
+  var move = "translate(" + this.x + "px, " + this.y + "px)"
+  if(this.rotation){
+  move += "rotate("+this.rotation +"deg)"
+
+  }
    this.element.style.transform = move}
 
 
