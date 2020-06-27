@@ -14,8 +14,8 @@ class Portal extends Sprite {
     this.element.style.display = bool ? "block" : "none"
   }
 
-  onCollide(){
-    if(this.isVisible){console.log("This portal is temporarily offline.")}
+  onCollide(reset){
+    if(this.isVisible){reset()}
 
 
   }

@@ -5,17 +5,21 @@ window.onload = function() {
 
 var width  = window.innerWidth
 var height =window.innerHeight
-
-    for(var i = 50; i > 0 ; i-- ){
-      createStar(i, randomInt(0, width), randomInt(0,height ), randomInt(15, 50), randomInt(1, 10))
-    }
-
+populateStars(50)
 
 }
-
-function startGame(){
+function resetGame(drawLoop, currentPlayer){
+  var gameMap = document.getElementById("gameMap")
+  gameMap.innerHTML=''
+populateStars(50)
+clearInterval(drawLoop)
+currentPlayer.setNewCoords(0, 0)
+currentPlayer.element = currentPlayer.initElement()
+currentPlayer.draw()
+startGame({player : currentPlayer})
+}
+function startGame({player = new Player(100, 25, 0, 0  )  }){
   var portal = new Portal(140, 140, 600, 300)
-  var player = new Player(100, 25, 0, 0, "player" )
   let entities = [player]
   for(var i = 0; i < 3; i ++){
     entities.push(new Enemy(50, 30, randomInt(100, 700), randomInt(100, 700)))
@@ -34,7 +38,11 @@ if(entities[0].isColliding(entities[j])){
 }
 }
 if(portal.isColliding(entities[0])){
-  portal.onCollide()
+  portal.onCollide(()=> {
+    resetGame(drawLoop, player)
+
+
+  })
 }
 } , 50/3)
 
@@ -45,7 +53,15 @@ function buttonClick(){
 window.location.href = "/game"
 
 }
+function populateStars(num){
+  var starMap = document.getElementById("starsSet")
+  starMap.innerHTML=''
+  for(var i = num; i > 0 ; i-- ){
+    createStar(i, randomInt(0, window.innerWidth), randomInt(0,window.innerHeight ), randomInt(15, 50), randomInt(1, 10))
+}
 
+
+}
 function createStar(num, x, y, blur, spread){
   var star = document.createElement("div")
   star.classList.add("star")

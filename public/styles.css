@@ -1,9 +1,20 @@
 /*Main CSS*/
+* {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        outline: 0;
+        font-size: 100%;
+        vertical-align: baseline;
+        background: transparent;
+    }
+
 body, .map {
     height: 100vh;
     width: 100vw;
     background-color: rgb(34, 37, 42);
     overflow:hidden;
+    z-index: 0;
 }
 
 .star {
@@ -13,6 +24,7 @@ body, .map {
     background-color: rgb(253, 253, 253);
     box-shadow: 0px 0px 20px 5px rgba(253, 253, 253, 0.8);
     transform: translate(50px, 50px);
+    z-index: 5;
 }
 .playerDimensions{
   width:110px;
@@ -29,7 +41,7 @@ body, .map {
 
 
 
-.player, .ship, .starSet, .sprite{
+.player, .ship, .starSet, .sprite, .gameMap{
  position: absolute;
  top: 0px ;
  left:  0px ;
@@ -42,7 +54,7 @@ body, .map {
  position:absolute;
  top: 0px;
  left: 0px;
-
+ z-index: 100;
 
 
 }
@@ -148,6 +160,11 @@ text-align: center;
 .laser{
   width: 20px;
   height: 10px;
+
+}
+
+.sprite{
+  z-index: 10;
 
 
 
