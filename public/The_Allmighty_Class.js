@@ -10,7 +10,6 @@ var types = {
     "enemy":"enemy-ship.png",
     "player":"spaceship.png",
     "portal":"Portal.png",
-    "laser":" "
       }
 class Sprite{
   // AKA the Allmighty Class to rule all classes
@@ -20,7 +19,7 @@ class Sprite{
     this.x = x
     this.y= y
     this.type = type
-
+    this.rotation = 0
 
     if(id){
     this.element = document.getElementById(id)
@@ -37,8 +36,9 @@ class Sprite{
   initElement(){
   var element = document.createElement("div")
   element.classList.add("sprite")
-  element.innerHTML = ('<img src="images/'+ types[this.type]+
-  '" style="width:'+ this.width+ 'px; height:'+ this.height +'px;" />')
+  var prefix = (types[this.type])? '<img src="images/'+types[this.type]+'"':"<div class='"+this.type+"' "
+  var suffix = (types[this.type])? '/>': '></div>'
+  element.innerHTML = (prefix +' style="width:'+ this.width+ 'px; height:'+ this.height +'px;"'+ suffix)
   document.getElementById("gameMap").append(element)
   return element
   }

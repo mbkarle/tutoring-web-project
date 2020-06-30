@@ -10,7 +10,6 @@ class Entity extends Sprite{
     this.iDuration = 1000
       // Keep at 1000 ^
     this.maxHealth = health
-    this.rotation = 0
     this.rotationSpeed = 5
     this.isAlive = true
     this.width = 100
@@ -70,18 +69,21 @@ class Player extends Entity {
     this.defaultSpeed = this.speed
     this.canDash = true
     this.healthSliderID = "playerHealthSlider"
+    this.fireRate = 750
+    // ^This is in milliseconds
      this.timerID={
       "w":-1,
       's':-1,
       'a':-1,
-      "d":-1
+      "d":-1,
+      "click":-1
     }
     this.keyAllowed= {
       "w":true,
       "s":true,
       "a":true,
       "d":true,
-      " ":true
+      " ":true,
     }
 
 
@@ -96,9 +98,10 @@ onDeath(){
   death.style.display = "flex"
 }
 
-
 shoot(){
-
+var laser = new Laser(this.damage, this.x + 52, this.y+ 18 )
+laser.rotation = this.rotation
+laser.draw()
 }
 keyPress(e){
 if(this.isAlive){let self = this
@@ -153,8 +156,19 @@ keyUp(e){
     this.keyAllowed[e.key] = true
     clearInterval(this.timerID[e.key])
   }
-
 }
+mousedown(e){
+this.shoot()
+clearInterval(this.timerID["click"])
+this.timerID["click"] = setInterval(()=>{
+this.shoot()
+}, this.fireRate)
+}
+mouseup(e){
+  clearInterval(this.timerID["click"])
+}
+
+
 
 
 
@@ -208,28 +222,7 @@ this.y += Math.ceil(direction[1]* this.speed)
 
 
 
-class Laser extends Sprite{
-  constructor(damage, x, y,){
-    super(20, 10, x, y,"laser")
 
-      this.damage = damage
-
-
-  }
-
-
-
-onCollide(other){
-if(!other.invinciblity){ other.health -= this.damage
-other.setInvincible(true)
-setTimeout(()=> other.setInvincible(false), other.iDuration)
-console.log("Health: " + other.health)}
-other.updateHealthBar()
-}
-
-
-
-}
 
 
 

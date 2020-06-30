@@ -45,7 +45,7 @@ body, .map {
  position: absolute;
  top: 0px ;
  left:  0px ;
-
+ user-select:none;
 
 
 }
@@ -160,6 +160,9 @@ text-align: center;
 .laser{
   width: 20px;
   height: 10px;
+  background-color: rgba(220, 20, 60, .8);
+  border-radius: 30%;
+  border: solid 1px rgb(139,0,0);
 
 }
 

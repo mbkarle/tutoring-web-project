@@ -25,7 +25,8 @@ function startGame({player = new Player(100, 25, 0, 0  )  }){
     entities.push(new Enemy(50, 30, randomInt(100, 700), randomInt(100, 700)))
   }
 document.addEventListener("keydown", function(e){player.keyPress(e)})
-
+document.addEventListener("mousedown", function(e){player.mousedown(e)})
+document.addEventListener("mouseup", function(e){player.mouseup(e)})
 document.addEventListener("keyup", function(e){player.keyUp(e)})
 let drawLoop = setInterval(()=>{
 for(var i = 0; i < entities.length; i++){
