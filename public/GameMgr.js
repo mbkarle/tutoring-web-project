@@ -28,7 +28,7 @@ class GameMgr {
     this.sprites = [player];
     this.spritesHistory = [];
     this.enemies = [];
-    [1, 2, 3].map( num => this.addGeneratedEnemy({}) );
+    [1, 1, 1].map( num => this.addGeneratedEnemy({}) );
     this.ballistics = [];
     this.locations = [new Portal(140, 140, this.boundaries[0] - 200, this.boundaries[1] - 200)];
     this.round = num;

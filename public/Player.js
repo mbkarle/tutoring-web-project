@@ -6,6 +6,7 @@ class Entity extends Sprite{
     this.health = health
     this.damage = damage
     this.speed = 6
+    this.defaultSpeed = this.speed;
     this.invinciblity = false
     this.iDuration = 1000
       // Keep at 1000 ^
@@ -110,17 +111,14 @@ if(this.isAlive){let self = this
   }
   if(e.key == "w"){
     this.timerID["w"] = setInterval(function(){
-     self.y-= self.speed * Math.cos(radians(self.rotation))
-     self.x += self.speed * Math.sin(radians(self.rotation))
-
-
+     self.speed = self.defaultSpeed;
+     self.move();
     },45 )
   }
   if(e.key == "s"){
     this.timerID["s"] = setInterval(function(){
-      self.y += self.speed * Math.cos(radians(self.rotation))
-      self.x -= self.speed * Math.sin(radians(self.rotation))
-
+      self.speed = - self.defaultSpeed;
+      self.move();
 
     }, 45)
   }
@@ -140,9 +138,9 @@ if(this.isAlive){let self = this
    }, 45)
   }
   if(e.key == " " && self.canDash){
-    self.speed = 25
+    self.speedMultiplier = 5
     self.canDash = false
-    setTimeout(()=> self.speed = this.defaultSpeed, 250)
+    setTimeout(()=> self.speedMultiplier = 1, 250)
     setTimeout(()=> self.canDash = true, 2500)
   }
 
@@ -178,9 +176,8 @@ mouseup(e){
 class Enemy extends Entity {
   constructor(health, damage, x, y, id){
   super("enemy", health, damage, x, y, id)
-let self = this
-this.target = [this.x, this.y]
-  self.moveTimer = setInterval(() => this.randomMove() , 50)
+  this.target = [this.x, this.y]
+  this.moveTimer = setInterval(() => this.randomMove() , 50)
 
 }
 
@@ -188,22 +185,40 @@ this.target = [this.x, this.y]
 randomMove(){
   if(this.atTarget()){
     this.speed = randomInt(2, 20)
-    this.randomTarget()}
-  this.nextPosition()
-
-
+    this.randomTarget()
+    this.rotationSpeed = randomInt(5, 15);
+  }
+  this.nextRotation(...this.target);
+  this.move();
 }
 atTarget(){
-return (Math.abs(this.x - this.target[0])<this.speed && Math.abs(this.y - this.target[1])<this.speed)
+return (Math.abs(this.x - this.target[0]) < this.speed * 2 && Math.abs(this.y - this.target[1]) < this.speed * 2)
 }
 setTarget(x, y){
   this.target[0] = x
   this.target[1] = y
 }
 randomTarget(){
-let x = randomInt(0, window.innerWidth)
-let y = randomInt(0, window.innerHeight)
-this.setTarget(x, y)
+  let x = randomInt(0, window.innerWidth)
+  let y = randomInt(0, window.innerHeight)
+  this.setTarget(x, y)
+}
+
+getBearing(x, y) {
+  let theta = toDeg(Math.atan2(-(y - this.y), x - this.x));//get angle relative to positive x axis
+  let bearing = (450 - theta) % 360; //get bearing from north
+  return bearing;
+}
+
+nextRotation(x, y) {
+  let bearing = this.getBearing(x, y); //get bearing
+  let turnDiff = bearing - this.rotation; //get the difference between rotations in one direction
+  let altTurnDiff = bearing + 360 * sign(this.rotation - bearing) - this.rotation; //get rotate diff in other direction
+  let diff = minMag(turnDiff, altTurnDiff); //select the smaller turn
+  if(Math.abs(diff) > this.rotationSpeed) { //if not already on course
+    this.rotation += this.rotationSpeed * sign(diff); //turn in direction
+    this.rotation = normalizeBearing(this.rotation); //if rotation overflows, reset to 0
+  }
 }
 nextPosition(){
 let displacement = [this.target[0] - this.x, this.target[1] - this.y]

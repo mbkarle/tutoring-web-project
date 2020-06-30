@@ -6,6 +6,19 @@ return(Math.floor(Math.random()*(max-min))+ min)
 function radians(degrees){
   return Math.PI * degrees / 180
 }
+function toDeg(radians) {
+  return radians * 180 / Math.PI;
+}
+function sign(num) {
+  return num < 0 ? -1: 1;
+}
+function minMag(a, b) {
+  return (Math.abs(a) <= Math.abs(b)) ? a : b;
+}
+function normalizeBearing(bearing) { //make angle in range [0, 360]
+  let pos = (bearing < 0) ? 360 + bearing : bearing;
+  return pos % 360;
+}
 var types = {
     "enemy":"enemy-ship.png",
     "player":"spaceship.png",
@@ -20,6 +33,8 @@ class Sprite{
     this.y= y
     this.type = type
     this.rotation = 0
+    this.rotationSpeed = 5;
+    this.speedMultiplier = 1;
 
     if(id){
     this.element = document.getElementById(id)
@@ -70,6 +85,13 @@ class Sprite{
      this.x = x
      this.y = y
    }
+
+  move() {
+    let theta = radians(this.rotation);
+    let direction = [Math.sin(theta), Math.cos(theta)]
+    this.x += Math.ceil(direction[0] * this.speed * this.speedMultiplier);
+    this.y -= Math.ceil(direction[1] * this.speed * this.speedMultiplier);
+  }
 
 
    isColliding(other){
