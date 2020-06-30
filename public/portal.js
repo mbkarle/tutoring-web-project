@@ -14,16 +14,9 @@ class Portal extends Sprite {
     this.element.style.display = bool ? "block" : "none"
   }
 
-  onCollide(reset){
-    if(this.isVisible){reset()}
-
-
+  onCollide(gameMgr){
+    if(this.isVisible){
+      gameMgr.reset();
+    }
   }
-
-
-
-
-
-
-
 }

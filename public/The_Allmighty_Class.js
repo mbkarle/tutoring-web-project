@@ -79,9 +79,27 @@ class Sprite{
      myHb.topY < otherHb.bottomY && myHb.bottomY > otherHb.topY)
    }
 
+  getRelativePosition(offsetX, offsetY) {
+    let theta = radians(this.rotation);
+    let coords = [this.x, this.y]; //top left of sprite
 
+    //add constant to move coords relative to center of sprite, the point of rotation
+    coords[0] += this.width/2;
+    coords[1] += this.height/2;
 
+    //add trig multiples to maintain coords at "top left" corner as it rotates
+    coords[0] += this.height/2 * Math.sin(theta) - Math.cos(theta) * this.width / 2;
+    coords[1] += - this.height/2 * Math.cos(theta) - Math.sin(theta) * this.width / 2;
 
+    //add input offset to adjust to chosen position relative to top left corner
+    coords[0] += Math.sin(theta) * offsetY + Math.cos(theta) * offsetX;
+    coords[1] += Math.sin(theta) * offsetX - Math.cos(theta) * offsetY;
 
+    return coords;
+  }
+
+  hasChanged(old) {
+    return !(old && old.x === this.x && old.y === this.y && old.rotation === this.rotation);
+  }
 
 }

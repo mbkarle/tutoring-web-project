@@ -99,11 +99,11 @@ onDeath(){
 }
 
 shoot(){
-var laser = new Laser(this.damage, this.x + 52, this.y+ 18 )
-laser.rotation = this.rotation
-laser.draw()
+  var laser = new Laser(this.damage, ...this.getRelativePosition(this.width/2, 20))
+  laser.rotation = this.rotation
+  laser.draw()
 }
-keyPress(e){
+keydown(e){
 if(this.isAlive){let self = this
   if(!this.keyAllowed[e.key]){
     return
@@ -151,7 +151,7 @@ if(this.isAlive){let self = this
 
 
   }
-keyUp(e){
+keyup(e){
   if(!this.keyAllowed[e.key]){
     this.keyAllowed[e.key] = true
     clearInterval(this.timerID[e.key])
