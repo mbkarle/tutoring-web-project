@@ -19,6 +19,11 @@ function normalizeBearing(bearing) { //make angle in range [0, 360]
   let pos = (bearing < 0) ? 360 + bearing : bearing;
   return pos % 360;
 }
+function getDistance(coords1, coords2){
+  var deltaX = coords1[0]-coords2[0]
+  var deltaY = coords1[1]-coords2[1]
+  return Math.sqrt(Math.pow(deltaX, 2)+Math.pow(deltaY, 2))
+}
 var types = {
     "enemy":"enemy-ship.png",
     "player":"spaceship.png",
@@ -35,7 +40,7 @@ class Sprite{
     this.rotation = 0
     this.rotationSpeed = 5;
     this.speedMultiplier = 1;
-
+    this.speed = 5
     if(id){
     this.element = document.getElementById(id)
     }

@@ -65,12 +65,13 @@ onDeath(){
 
 
 class Player extends Entity {
-  constructor(health, damage, x, y, id){
+  constructor(health, damage, x, y, gameManager, id){
     super("player", health, damage, x, y, id)
     this.defaultSpeed = this.speed
     this.canDash = true
     this.healthSliderID = "playerHealthSlider"
     this.fireRate = 750
+    this.manager = gameManager
     // ^This is in milliseconds
      this.timerID={
       "w":-1,
@@ -100,8 +101,9 @@ onDeath(){
 }
 
 shoot(){
-  var laser = new Laser(this.damage, ...this.getRelativePosition(this.width/2, 20))
+  var laser = new Laser(this.damage, ...this.getRelativePosition(this.width/2, 20),this.manager)
   laser.rotation = this.rotation
+  this.manager.addBallistic(laser)
   laser.draw()
 }
 keydown(e){

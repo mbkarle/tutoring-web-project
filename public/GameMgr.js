@@ -16,7 +16,7 @@ class GameMgr {
   }
 
   startFirstGame() {
-    this.player = new Player(100, 25, 0, 0);
+    this.player = new Player(100, 25, 0, 0, this);
     this.addListeners(this.player);
     this.startRound();
   }
@@ -120,5 +120,9 @@ class GameMgr {
       document.addEventListener(listener, (e) => player[listener](e));
     });
   }
-
+  removeBallistics(ballistic){
+  this.ballistics.splice(this.ballistics.indexOf(ballistic),1)
+  this.sprites.splice(this.sprites.indexOf(ballistic),1)
+  
+  }
 }
