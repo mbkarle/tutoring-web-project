@@ -21,8 +21,10 @@ this.delete()
 if(!other.invinciblity){ other.health -= this.damage
 other.setInvincible(true)
 setTimeout(()=> other.setInvincible(false), other.iDuration)
-console.log("Health: " + other.health)}
-other.updateHealthBar()
+console.log("Health: " + other.health);
+(other.health <= 0)?other.delete(this.manager):null
+}
+// other.updateHealthBar()
 }
 delete(){
   super.delete()

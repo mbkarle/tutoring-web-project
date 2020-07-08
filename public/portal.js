@@ -6,7 +6,7 @@ class Portal extends Sprite {
     this.height = height
     this.x = x
     this.y = y
-    this.isVisible = true
+    this.isVisible = false
   }
 
   setVisibility(bool){

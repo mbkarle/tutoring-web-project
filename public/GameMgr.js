@@ -10,6 +10,9 @@ class GameMgr {
     this.round = 0;
     this.map = document.getElementById("gameMap");
     this.populateStars = populateStars;
+    this.killCounter = 0;
+    this.portalSound = new Audio("audio/inception.mp3");
+    this.portalSound.volume = 1/7;
     this.boundaries = [window.innerWidth, window.innerHeight];
 
     window.onresize = () => this.boundaries = [window.innerWidth, window.innerHeight];
@@ -31,6 +34,7 @@ class GameMgr {
     [1, 1, 1].map( num => this.addGeneratedEnemy({}) );
     this.ballistics = [];
     this.locations = [new Portal(140, 140, this.boundaries[0] - 200, this.boundaries[1] - 200)];
+    this.locations[0].setVisibility(false)
     this.round = num;
     this.startLoop();
   }
@@ -45,6 +49,7 @@ class GameMgr {
   reset() {
     this.clearRound();
     this.startRound();
+    this.killCounter = 0;
   }
 
   startLoop() {
@@ -121,8 +126,24 @@ class GameMgr {
     });
   }
   removeBallistics(ballistic){
-  this.ballistics.splice(this.ballistics.indexOf(ballistic),1)
-  this.sprites.splice(this.sprites.indexOf(ballistic),1)
-  
+  this.ballistics.splice(this.ballistics.indexOf(ballistic),1);
+  this.sprites.splice(this.sprites.indexOf(ballistic),1);
+  }
+  updateKillCount(){
+    this.killCounter += 1;
+    this.checkPortal();
+  }
+  removeEnemies(enemy){
+  this.enemies.splice(this.enemies.indexOf(enemy),1);
+  this.sprites.splice(this.sprites.indexOf(enemy),1);
+  this.updateKillCount();
+}
+  checkPortal(){
+  if(this.killCounter >= 3){
+    this.locations[0].setVisibility(true);
+    this.portalSound.play();
+  }
+
+
   }
 }

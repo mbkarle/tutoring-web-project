@@ -17,10 +17,6 @@ class Entity extends Sprite{
     this.height = 110
   }
 
-  delete(entities){
-    super.delete()
-    entities.splice( entities.indexOf(this)  , 1)
-  }
 
 
 
@@ -71,8 +67,8 @@ class Player extends Entity {
     this.canDash = true
     this.healthSliderID = "playerHealthSlider"
     this.fireRate = 750
-    this.manager = gameManager
     // ^This is in milliseconds
+    this.manager = gameManager
      this.timerID={
       "w":-1,
       's':-1,
@@ -182,7 +178,10 @@ class Enemy extends Entity {
   this.moveTimer = setInterval(() => this.randomMove() , 50)
 
 }
-
+delete(gameMgr){
+  super.delete()
+  gameMgr.removeEnemies(this)
+}
 
 randomMove(){
   if(this.atTarget()){
