@@ -31,7 +31,15 @@ class GameMgr {
     this.sprites = [player];
     this.spritesHistory = [];
     this.enemies = [];
-    [1, 1, 1].map( num => this.addGeneratedEnemy({}) );
+    for(var x = 0; x < 3 + Math.floor(this.round/3) ; x++ ){
+    this.addGeneratedEnemy({
+      health:Enemy.getDefaultValues().health *Math.pow(1.05, this.round),
+      damage:Enemy.getDefaultValues().damage *Math.pow(1.05, this.round)
+    })
+
+//T
+
+    }
     this.ballistics = [];
     this.locations = [new Portal(140, 140, this.boundaries[0] - 200, this.boundaries[1] - 200)];
     this.locations[0].setVisibility(false)
@@ -102,10 +110,16 @@ class GameMgr {
     let {
       x = randomInt(100, this.boundaries[0]),
       y = randomInt(100, this.boundaries[1]),
-      health = 50,
-      damage = 30
+      health = Enemy.getDefaultValues().health,
+      damage = Enemy.getDefaultValues().damage,
+      boundaries = {
+      minLeft:0,
+      minTop:0,
+      maxLeft: window.innerWidth,
+      maxTop: window.innerHeight,}
     } = enemyOptions;
     let enemy = new Enemy(health, damage, x, y);
+    enemy.setBoundaries(boundaries)
     this.addEnemy(enemy);
   }
 
@@ -139,11 +153,24 @@ class GameMgr {
   this.updateKillCount();
 }
   checkPortal(){
-  if(this.killCounter >= 3){
+  if(this.killCounter >= 3 && !this.locations[0].isVisible){
     this.locations[0].setVisibility(true);
     this.portalSound.play();
-  }
-
-
-  }
+    this.addGeneratedEnemy({
+      x : this.locations[0].x,
+      y : this.locations[0].y,
+      health : 200,
+      boundaries : {
+      minLeft:window.innerWidth*.75,
+      minTop:window.innerHeight/2,}
 }
+  )
+  }
+  // function killAll(){
+  // while (enemies.length > 0){
+  // enemies[0].delete(gameMgr)
+  // }
+  }
+
+
+  }

@@ -176,64 +176,79 @@ class Enemy extends Entity {
   super("enemy", health, damage, x, y, id)
   this.target = [this.x, this.y]
   this.moveTimer = setInterval(() => this.randomMove() , 50)
-
-}
-delete(gameMgr){
-  super.delete()
-  gameMgr.removeEnemies(this)
-}
-
-randomMove(){
-  if(this.atTarget()){
-    this.speed = randomInt(2, 20)
-    this.randomTarget()
-    this.rotationSpeed = randomInt(5, 15);
-  }
-  this.nextRotation(...this.target);
-  this.move();
-}
-atTarget(){
-return (Math.abs(this.x - this.target[0]) < this.speed * 2 && Math.abs(this.y - this.target[1]) < this.speed * 2)
-}
-setTarget(x, y){
-  this.target[0] = x
-  this.target[1] = y
-}
-randomTarget(){
-  let x = randomInt(0, window.innerWidth)
-  let y = randomInt(0, window.innerHeight)
-  this.setTarget(x, y)
-}
-
-getBearing(x, y) {
-  let theta = toDeg(Math.atan2(-(y - this.y), x - this.x));//get angle relative to positive x axis
-  let bearing = (450 - theta) % 360; //get bearing from north
-  return bearing;
-}
-
-nextRotation(x, y) {
-  let bearing = this.getBearing(x, y); //get bearing
-  let turnDiff = bearing - this.rotation; //get the difference between rotations in one direction
-  let altTurnDiff = bearing + 360 * sign(this.rotation - bearing) - this.rotation; //get rotate diff in other direction
-  let diff = minMag(turnDiff, altTurnDiff); //select the smaller turn
-  if(Math.abs(diff) > this.rotationSpeed) { //if not already on course
-    this.rotation += this.rotationSpeed * sign(diff); //turn in direction
-    this.rotation = normalizeBearing(this.rotation); //if rotation overflows, reset to 0
+  this.boundaries = {
+    minLeft:0,
+    minTop:0,
+    maxLeft: window.innerWidth,
+    maxTop: window.innerHeight,
   }
 }
-nextPosition(){
-let displacement = [this.target[0] - this.x, this.target[1] - this.y]
-let magnitude = Math.sqrt(displacement[0]*displacement[0] + displacement[1]*displacement[1] )
-let direction = [displacement[0]/magnitude, displacement[1]/magnitude]
-this.x += Math.ceil(direction[0]* this.speed)
-this.y += Math.ceil(direction[1]* this.speed)
+  delete(gameMgr){
+    super.delete()
+    gameMgr.removeEnemies(this)
+  }
+
+  randomMove(){
+    if(this.atTarget()){
+      this.speed = randomInt(2, 20)
+      this.randomTarget()
+      this.rotationSpeed = randomInt(5, 15);
+    }
+    this.nextRotation(...this.target);
+    this.move();
+  }
+  atTarget(){
+  return (Math.abs(this.x - this.target[0]) < this.speed * 2 && Math.abs(this.y - this.target[1]) < this.speed * 2)
+  }
+  setTarget(x, y){
+    this.target[0] = x
+    this.target[1] = y
+  }
+  randomTarget(){
+    let x = randomInt(this.boundaries["minLeft"], this.boundaries["maxLeft"])
+    let y = randomInt(this.boundaries["minTop"], this.boundaries["maxTop"])
+    this.setTarget(x, y)
+  }
+
+  getBearing(x, y) {
+    let theta = toDeg(Math.atan2(-(y - this.y), x - this.x));//get angle relative to positive x axis
+    let bearing = (450 - theta) % 360; //get bearing from north
+    return bearing;
+  }
+
+  nextRotation(x, y) {
+    let bearing = this.getBearing(x, y); //get bearing
+    let turnDiff = bearing - this.rotation; //get the difference between rotations in one direction
+    let altTurnDiff = bearing + 360 * sign(this.rotation - bearing) - this.rotation; //get rotate diff in other direction
+    let diff = minMag(turnDiff, altTurnDiff); //select the smaller turn
+    if(Math.abs(diff) > this.rotationSpeed) { //if not already on course
+      this.rotation += this.rotationSpeed * sign(diff); //turn in direction
+      this.rotation = normalizeBearing(this.rotation); //if rotation overflows, reset to 0
+    }
+  }
+  nextPosition(){
+  let displacement = [this.target[0] - this.x, this.target[1] - this.y]
+  let magnitude = Math.sqrt(displacement[0]*displacement[0] + displacement[1]*displacement[1] )
+  let direction = [displacement[0]/magnitude, displacement[1]/magnitude]
+  this.x += Math.ceil(direction[0]* this.speed)
+  this.y += Math.ceil(direction[1]* this.speed)
+  }
+  setBoundaries({minLeft = 0, minTop = 0, maxLeft = window.innerWidth,
+    maxTop = window.innerHeight}){
+      this.boundaries.minLeft = minLeft;
+      this.boundaries.minTop = minTop;
+      this.boundaries.maxLeft = maxLeft;
+      this.boundaries.maxTop = maxTop;
+  }
+  static getDefaultValues(){
+    return {
+        health: 75,
+        damage: 30,
+      }
+
+  }
+
 }
-
-
-
-
-}
-
 
 
 
