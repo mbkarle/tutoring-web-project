@@ -172,7 +172,7 @@ mouseup(e){
 }
 
 class Enemy extends Entity {
-  constructor(health, damage, x, y, id){
+  constructor(health, damage, x, y, gameManager, id){
   super("enemy", health, damage, x, y, id)
   this.target = [this.x, this.y]
   this.moveTimer = setInterval(() => this.randomMove() , 50)
@@ -182,6 +182,7 @@ class Enemy extends Entity {
     maxLeft: window.innerWidth,
     maxTop: window.innerHeight,
   }
+  this.manager = gameManager
 }
   delete(gameMgr){
     super.delete()
@@ -191,7 +192,14 @@ class Enemy extends Entity {
   randomMove(){
     if(this.atTarget()){
       this.speed = randomInt(2, 20)
+      if(Math.random() <=this.distanceToTargetChance(getDistance(
+        [this.manager.player.x, this.manager.player.y], [this.x, this.y]))){
+        this.targetPlayer()
+        this.speed = 15
+      }
+      else{
       this.randomTarget()
+      }
       this.rotationSpeed = randomInt(5, 15);
     }
     this.nextRotation(...this.target);
@@ -245,8 +253,14 @@ class Enemy extends Entity {
         health: 75,
         damage: 30,
       }
-
   }
+targetPlayer(){
+this.setTarget(this.manager.player.x, this.manager.player.y)
+}
+distanceToTargetChance(distance){
+return (-0.4/(window.innerWidth))*distance+0.5
+
+}
 
 }
 

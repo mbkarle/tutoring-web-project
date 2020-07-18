@@ -118,7 +118,7 @@ class GameMgr {
       maxLeft: window.innerWidth,
       maxTop: window.innerHeight,}
     } = enemyOptions;
-    let enemy = new Enemy(health, damage, x, y);
+    let enemy = new Enemy(health, damage, x, y, this);
     enemy.setBoundaries(boundaries)
     this.addEnemy(enemy);
   }
@@ -166,11 +166,21 @@ class GameMgr {
 }
   )
   }
+
   // function killAll(){
   // while (enemies.length > 0){
   // enemies[0].delete(gameMgr)
   // }
   }
+  stopMoving(){
+  for(var x = 0; x < this.enemies.length; x++){
+  clearInterval(this.enemies[x].moveTimer)
+  }
+}
+// ^for testing purposes, delete when no longer needed^
+
+
+
 
 
   }
