@@ -67,6 +67,7 @@ class Player extends Entity {
     this.canDash = true
     this.healthSliderID = "playerHealthSlider"
     this.fireRate = 750
+    this.money = 0
     // ^This is in milliseconds
     this.manager = gameManager
      this.timerID={
@@ -163,7 +164,10 @@ this.shoot()
 mouseup(e){
   clearInterval(this.timerID["click"])
 }
-
+addMoney(newMoney){
+  this.money += newMoney;
+  document.getElementById("moneyCounter").innerHTML = ": " + this.money;
+}
 
 
 
@@ -187,8 +191,12 @@ class Enemy extends Entity {
   delete(gameMgr){
     super.delete()
     gameMgr.removeEnemies(this)
+    this.drops(gameMgr)
   }
+  drops(gameMgr){
+    gameMgr.player.addMoney(5)
 
+  }
   randomMove(){
     if(this.atTarget()){
       this.speed = randomInt(2, 20)

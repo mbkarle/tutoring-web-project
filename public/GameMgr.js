@@ -11,6 +11,7 @@ class GameMgr {
     this.map = document.getElementById("gameMap");
     this.populateStars = populateStars;
     this.killCounter = 0;
+    this.shownKillCounter = 0;
     this.portalSound = new Audio("audio/inception.mp3");
     this.portalSound.volume = 1/7;
     this.boundaries = [window.innerWidth, window.innerHeight];
@@ -145,6 +146,8 @@ class GameMgr {
   }
   updateKillCount(){
     this.killCounter += 1;
+    this.shownKillCounter ++;
+    document.getElementById("killCounter").innerHTML = ": "+ this.shownKillCounter;
     this.checkPortal();
   }
   removeEnemies(enemy){
