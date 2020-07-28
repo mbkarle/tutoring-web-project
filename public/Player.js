@@ -168,7 +168,11 @@ addMoney(newMoney){
   this.money += newMoney;
   document.getElementById("moneyCounter").innerHTML = ": " + this.money;
 }
+addHealth(change){
+this.health += change;
+this.updateHealthBar()
 
+}
 
 
 
@@ -187,6 +191,7 @@ class Enemy extends Entity {
     maxTop: window.innerHeight,
   }
   this.manager = gameManager
+  this.lootTable = [new Credits(), new RepairPack()]
 }
   delete(gameMgr){
     super.delete()
@@ -194,8 +199,12 @@ class Enemy extends Entity {
     this.drops(gameMgr)
   }
   drops(gameMgr){
-    gameMgr.player.addMoney(5)
-
+    var i = 0
+    for(var loot of this.lootTable){
+      loot.setNewCoords(this.x +(i * 40), this.y +(i * 40) )
+      loot.spawn(gameMgr)
+      i++
+    }
   }
   randomMove(){
     if(this.atTarget()){

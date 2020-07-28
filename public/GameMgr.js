@@ -14,6 +14,7 @@ class GameMgr {
     this.shownKillCounter = 0;
     this.portalSound = new Audio("audio/inception.mp3");
     this.portalSound.volume = 1/7;
+    this.items = [];
     this.boundaries = [window.innerWidth, window.innerHeight];
 
     window.onresize = () => this.boundaries = [window.innerWidth, window.innerHeight];
@@ -26,6 +27,7 @@ class GameMgr {
   }
 
   startRound(num = this.round + 1) {
+    document.getElementById("roundCounter").innerHTML = "Round: " + this.round;
     let player = this.player;
     player.setNewCoords(0, 0);
     player.draw();
@@ -42,6 +44,7 @@ class GameMgr {
 
     }
     this.ballistics = [];
+    this.items = [];
     this.locations = [new Portal(140, 140, this.boundaries[0] - 200, this.boundaries[1] - 200)];
     this.locations[0].setVisibility(false)
     this.round = num;
@@ -53,6 +56,7 @@ class GameMgr {
     this.map.innerHTML = "";
     this.player.element = this.player.initElement();
     this.populateStars(50);
+
   }
 
   reset() {
@@ -98,6 +102,11 @@ class GameMgr {
     for(let location of this.locations) {
       if(player.isColliding(location)) {
         location.onCollide(this)
+      }
+    }
+    for(let item of this.items) {
+      if(player.isColliding(item)) {
+        item.onCollide(this, player)
       }
     }
   }
@@ -154,6 +163,10 @@ class GameMgr {
   this.enemies.splice(this.enemies.indexOf(enemy),1);
   this.sprites.splice(this.sprites.indexOf(enemy),1);
   this.updateKillCount();
+}
+  removeItem(item){
+  this.items.splice(this.items.indexOf(item),1);
+  this.sprites.splice(this.sprites.indexOf(item),1);
 }
   checkPortal(){
   if(this.killCounter >= 3 && !this.locations[0].isVisible){

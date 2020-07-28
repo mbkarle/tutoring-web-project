@@ -28,6 +28,8 @@ var types = {
     "enemy":"enemy-ship.png",
     "player":"spaceship.png",
     "portal":"Portal.png",
+    "credits":"Money-Sign.png",
+    "repair-pack":"Repair-Pack.png",
       }
 class Sprite{
   // AKA the Allmighty Class to rule all classes
@@ -47,7 +49,12 @@ class Sprite{
     else{
       this.element = this.initElement()
     }
-    this.draw()
+    try{
+      this.draw()
+    }catch(e){
+    }
+    // ^this catches an error that we don't care about and allows the code
+    // to contine running
   }
 
 
