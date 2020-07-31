@@ -67,8 +67,8 @@ class Player extends Entity {
     this.canDash = true
     this.healthSliderID = "playerHealthSlider"
     this.fireRate = 750
+// ^This is in milliseconds
     this.money = 0
-    // ^This is in milliseconds
     this.manager = gameManager
      this.timerID={
       "w":-1,

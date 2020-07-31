@@ -1,5 +1,77 @@
 
+class Backpack{
+constructor(owner, capacity, icon){
+
+this.owner = owner
+this.capacity = capacity
+this.icon = icon
+this.inventory = []
+this.equippedItems = {
+  "Hull":[],
+  "Engine":[],
+  "Weapon":[],
+  }
+}
+
+
+addItem(item){
+  if(!isCarrying(item)){
+ this.inventory.push(item)
+}
+}
+removeItem(item){
+return removeFromArray(item, this.inventory)
+}
+isCarrying(item){
+  return this.inventory.indexOf(item)!=-1
+}
+equipItem(item){
+  if(this.removeItem(item)){
+  this.equippedItems[item.upgradeType].push(item)
+  item.equip(this.owner)
+  return true
+  }
+  return false
+}
+unequipItem(item){
+if(removeFromArray(item, this.equippedItems[item.upgradeType])){
+  this.addItem(item)
+  item.unequip(this.owner)
+  return true
+  }
+return false
+}
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class Item extends Sprite{
+// Mainly item drops ^
 constructor(width, height, x, y, type){
 super(width, height, x, y, type, "fakeID")
 
@@ -62,4 +134,60 @@ class RepairPack extends Item{
       player.addHealth(this.repair)
     }
   }
+}
+
+
+
+
+
+
+
+
+class Upgrade{
+constructor(name, upgradeType, image, description, rarity, addEffect, removeEffect){
+
+  this.name = name
+  this.upgradeType = upgradeType
+  this.image = image
+  this.description = description
+  this.rarity = rarity
+  this.isEquipped = false
+  this.addEffect = addEffect
+  this.removeEffect = removeEffect
+}
+
+  equip(player){
+    if(!this.isEquipped){
+        this.isEquipped = true
+        this.addEffect(player)
+    }
+  }
+  unequip(player){
+    if(this.isEquipped){
+      this.isEquipped = false
+      this.removeEffect(player)
+    }
+  }
+}
+
+
+
+class BasicUpgrade{
+  constructor(name, upgradeType, image, description, rarity, effects ){
+    super(name, upgradeType, image, description, rarity,
+     (player)=>{
+       for(var property in effects){
+       player[property] += effects[property]
+     }
+     },
+     (player)=>{
+       for(var property in effects){
+       player[property] -= effects[property]
+     }
+     })
+
+    this.effects = effects
+
+  }
+
 }

@@ -24,6 +24,10 @@ function getDistance(coords1, coords2){
   var deltaY = coords1[1]-coords2[1]
   return Math.sqrt(Math.pow(deltaX, 2)+Math.pow(deltaY, 2))
 }
+function removeFromArray(item, array){
+  var index = array.indexOf(item)
+    return index == -1 ? false : array.splice(index, 1)
+}
 var types = {
     "enemy":"enemy-ship.png",
     "player":"spaceship.png",
