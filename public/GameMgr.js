@@ -1,3 +1,11 @@
+function getUpgrades(gameMgr){
+$.get("/upgrades", (obj)=>{
+  gameMgr.upgradesList=( new UpgradesList(obj["upgrades"]));
+})
+}
+
+
+
 class GameMgr {
   constructor(populateStars) {
     this.player;
@@ -15,9 +23,11 @@ class GameMgr {
     this.portalSound = new Audio("audio/inception.mp3");
     this.portalSound.volume = 1/7;
     this.items = [];
+    this.upgradesList = false;
     this.boundaries = [window.innerWidth, window.innerHeight];
 
     window.onresize = () => this.boundaries = [window.innerWidth, window.innerHeight];
+    getUpgrades(this);
   }
 
   startFirstGame() {

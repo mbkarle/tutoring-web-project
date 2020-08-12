@@ -62,13 +62,14 @@ onDeath(){
 
 class Player extends Entity {
   constructor(health, damage, x, y, gameManager, id){
-    super("player", health, damage, x, y, id)
+    super("player", health + 10000000, damage, x, y, id)
     this.defaultSpeed = this.speed
     this.canDash = true
     this.healthSliderID = "playerHealthSlider"
     this.fireRate = 750
 // ^This is in milliseconds
     this.money = 0
+    this.backpack = new Backpack(this, 10, "")
     this.manager = gameManager
      this.timerID={
       "w":-1,

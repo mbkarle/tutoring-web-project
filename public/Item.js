@@ -15,7 +15,7 @@ this.equippedItems = {
 
 
 addItem(item){
-  if(!isCarrying(item)){
+  if(!this.isCarrying(item)){
  this.inventory.push(item)
 }
 }
@@ -50,9 +50,20 @@ return false
 
 
 
+class UpgradesList {
+  constructor(list){
+    this.list = list
+
+  }
+static  makeUpgrade(data){
+ return new BasicUpgrade(data)
+}
 
 
 
+
+
+}
 
 
 
@@ -172,8 +183,8 @@ constructor(name, upgradeType, image, description, rarity, addEffect, removeEffe
 
 
 
-class BasicUpgrade{
-  constructor(name, upgradeType, image, description, rarity, effects ){
+class BasicUpgrade extends Upgrade{
+  constructor({name, upgradeType, image, description, rarity, effects}){
     super(name, upgradeType, image, description, rarity,
      (player)=>{
        for(var property in effects){

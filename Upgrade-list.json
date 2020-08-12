@@ -1,0 +1,36 @@
+{
+"upgrades":[ {
+"name":"Refined Lens",
+"upgradeType":"Weapon",
+"image":"",
+"description":"This slightly refined lens focuses your laser for greater impact",
+"rarity":"common",
+"effects":{"damage" : 10}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+]
+}
