@@ -58,10 +58,23 @@ class UpgradesList {
 static  makeUpgrade(data){
  return new BasicUpgrade(data)
 }
-
-
-
-
+static makeRandomUpgrade(dataList){
+var chosenUpgrade = randomInt(0, dataList.length)
+return makeUpgrade(dataList[chosenUpgrade])
+}
+filterBy(field, value){
+var filteredList = []
+for(var i in this.list){
+  if(this.list[i][field] === value){
+    filteredList.push(this.list[i])
+  }
+}
+return filteredList
+}
+// fancyFilter(field, value){
+// return this.list.filter((obj)=>this.list[i][field] === value)
+// }
+// ^ this uses JavaScript's built in filter ^
 
 }
 
@@ -138,7 +151,7 @@ class RepairPack extends Item{
 
   addEffect(player){
     if(player.health + this.repair >= player.maxHealth){
-        player.health = player.maxHealth
+        player.addHealth(player.maxHealth - player.health)
         console.log("You are fully Repaired")
     }
     else{
