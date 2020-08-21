@@ -56,7 +56,7 @@ body, .map {
  top: 0px;
  left: 0px;
  width:100%;
- z-index: 100;
+ z-index: 1001;
 }
 .rightSideUI{
  position:absolute;
@@ -74,6 +74,7 @@ body, .map {
  display: flex;
  align-items: center;
  flex-direction: row;
+
 }
 
 .counterColumn{
@@ -179,6 +180,7 @@ text-align: center;
   align-items:center;
   justify-content: center;
   user-select:none;
+
 }
 
 .backpackButton:active{
@@ -213,6 +215,57 @@ text-align: center;
 
 .sprite{
   z-index: 10;
+
+}
+
+
+.modalBackground{
+background-color: rgba(20, 20, 21, 0.5);
+position: absolute;
+top: 0px;
+left: 0px;
+height: 100vh;
+width: 100vw;
+display: flex;
+justify-content: flex-start;
+align-items: center;
+flex-direction: column;
+z-index: 1000;
+display: none;
+}
+
+.modalContent{
+border-style: solid;
+border-color: black;
+border-radius: 30px;
+border-width: 6px;
+background-color: rgba(119, 122, 121, 0.8);
+padding: 10px;
+display: flex;
+overflow: auto;
+
+}
+
+.modalInventory{
+margin-top: 20vh;
+width: 30vw;
+height: 40vh;
+flex-direction: column;
+align-items: center;
+
+
+
+}
+
+.modalEquipped{
+margin-top: auto;
+margin-bottom: 10px;
+width: 60vw;
+height: 20vh;
+
+
+
+
 
 
 

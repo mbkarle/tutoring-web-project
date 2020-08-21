@@ -158,6 +158,9 @@ class GameMgr {
     listeners.map( listener => {
       document.addEventListener(listener, (e) => player[listener](e));
     });
+    $("#backpackButton").on("click", ()=>{this.toggleModal()
+      $("#backpackButton").blur()
+    })
   }
   removeBallistics(ballistic){
   this.ballistics.splice(this.ballistics.indexOf(ballistic),1);
@@ -192,12 +195,22 @@ class GameMgr {
 }
   )
   }
+}
+toggleModal(modalID = "modal", requestedState){
+var modal = document.getElementById(modalID)
+modal.style.display = requestedState || modal.style.display == "none"? "flex" : "none"
+}
+
+
+
+
+
 
   // function killAll(){
   // while (enemies.length > 0){
   // enemies[0].delete(gameMgr)
   // }
-  }
+
   stopMoving(){
   for(var x = 0; x < this.enemies.length; x++){
   clearInterval(this.enemies[x].moveTimer)
