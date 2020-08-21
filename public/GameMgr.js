@@ -27,7 +27,7 @@ class GameMgr {
     this.boundaries = [window.innerWidth, window.innerHeight];
 
     window.onresize = () => this.boundaries = [window.innerWidth, window.innerHeight];
-    getUpgrades(this);
+    //getUpgrades(this);
   }
 
   startFirstGame() {

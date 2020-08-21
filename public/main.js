@@ -6,9 +6,40 @@ window.onload = function() {
 
 }
 
+function pickOne(list) {
+  return list[randomInt(0, list.length)];
+}
+
 function startGame(){
   gameMgr = new GameMgr(populateStars);
   gameMgr.startFirstGame();
+  let list = []
+  let multipliers = {
+    "common": 1,
+    "rare": 2,
+    "epic": 4,
+    "legendary": 8,
+    "mythic": 16
+  }
+  let effectTypes = {
+    "Weapon": "damage",
+    "Hull": "health",
+    "Engine": "speed"
+  }
+  for(let i = 0; i < 100; i++) {
+    let rarity = pickOne(Object.keys(multipliers));
+    let type = pickOne(["Weapon", "Engine", "Hull"]);
+    let multiplier = multipliers[rarity];
+    list[i] = {
+      name: `Upgrade #${i}`,
+      rarity: rarity,
+      upgradeType: type,
+      effects: { [effectTypes[type]]: (randomInt(5, 20) * randomInt(multiplier/2, multiplier)) },
+      price: randomInt(10, 50) * multiplier,
+      description: `Upgrade #${i} improves your ${effectTypes[type]} as an addition to your ${type} upgrades suite`
+    }
+  }
+  gameMgr.upgradesList = new UpgradesList(list);
 }
 
 function buttonClick(){
