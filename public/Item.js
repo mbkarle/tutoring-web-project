@@ -71,6 +71,35 @@ for(var i in this.list){
 }
 return filteredList
 }
+getMostExpensive(){
+let currentMostExpensive = 0
+let upgrade = ""
+for(var obj of this.list){
+if(obj.price > currentMostExpensive){
+  currentMostExpensive = obj.price
+  upgrade = obj
+}
+}
+return upgrade
+}
+priceSort(){
+var lst = [...this.list]
+
+  for(var i = 1; i < lst.length; i++){
+    var j = i
+    while(j > 0 && lst[j].price < lst[j-1].price){
+      this.swap(j, j-1, lst)
+      j--
+    }
+  }
+  return lst
+}
+//            ^  Insertion Sort  ^
+swap(index1, index2, lst){
+var item1 = lst[index1]
+lst[index1] = lst[index2]
+lst[index2] = item1
+}
 // fancyFilter(field, value){
 // return this.list.filter((obj)=>this.list[i][field] === value)
 // }
@@ -79,9 +108,16 @@ return filteredList
 }
 
 
-
-
-
+// function fibonacci(term){
+//   if(term == 0){
+//     return 0
+//   }
+//   if(term == 1){
+//     return 1
+//   }
+//   return fibonacci(term - 1) + fibonacci(term - 2)
+// }
+// ^ example of a recursive function ^ with a speed of O(n^2)
 
 
 

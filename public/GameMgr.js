@@ -198,7 +198,7 @@ class GameMgr {
 }
 toggleModal(modalID = "modal", requestedState){
 var modal = document.getElementById(modalID)
-modal.style.display = requestedState || modal.style.display == "none"? "flex" : "none"
+modal.style.display = requestedState || modal.style.display == "flex"? "none" : "flex"
 }
 
 

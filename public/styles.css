@@ -226,7 +226,6 @@ top: 0px;
 left: 0px;
 height: 100vh;
 width: 100vw;
-display: flex;
 justify-content: flex-start;
 align-items: center;
 flex-direction: column;
@@ -264,7 +263,26 @@ width: 60vw;
 height: 20vh;
 
 
+}
 
+.modalContainer{
+display: flex;
+flex-direction: row;
+flex-wrap: wrap;
+/* justify-content: space-between; */
+justify-content: center;
+flex-grow: 1;
+align-items: center;
+overflow-y: auto;
+
+}
+
+.upgradeBox{
+background-color: blue;
+display: flex;
+width:96px;
+height: 96px;
+margin: 5px;
 
 
 
