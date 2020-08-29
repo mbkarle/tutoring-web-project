@@ -90,22 +90,29 @@ class Player extends Entity {
   }
 onDeath(){
   super.onDeath()
-  for(var i in this.timerID){
-    clearInterval(this.timerID[i])}
+  this.stopMoving()
   var game = document.getElementById("game")
   var death = document.getElementById("death")
   game.style.display = "none"
   death.style.display = "flex"
 }
+stopMoving(){
+for(var i in this.timerID){
+clearInterval(this.timerID[i])
+this.timerID[i] = -1
+}
 
+
+}
 shoot(){
+  if(this.manager.isPaused) return
   var laser = new Laser(this.damage, ...this.getRelativePosition(this.width/2, 20),this.manager)
   laser.rotation = this.rotation
   this.manager.addBallistic(laser)
-  laser.draw()
+    laser.draw()
 }
 keydown(e){
-if(this.isAlive){let self = this
+if(this.isAlive && !this.manager.isPaused){let self = this
   if(!this.keyAllowed[e.key]){
     return
   }
@@ -184,7 +191,8 @@ class Enemy extends Entity {
   constructor(health, damage, x, y, gameManager, id){
   super("enemy", health, damage, x, y, id)
   this.target = [this.x, this.y]
-  this.moveTimer = setInterval(() => this.randomMove() , 50)
+  this.moveTimer = -1
+  this.toggleMoveTimer()
   this.boundaries = {
     minLeft:0,
     minTop:0,
@@ -279,6 +287,17 @@ distanceToTargetChance(distance){
 return (-0.4/(window.innerWidth))*distance+0.5
 
 }
+toggleMoveTimer(){
+  if(this.moveTimer == -1){
+    this.moveTimer = setInterval(()=> this.randomMove(), 50)
+    }
+  else{
+      clearInterval(this.moveTimer)
+    this.moveTimer = -1
+  }
+}
+
+
 
 }
 

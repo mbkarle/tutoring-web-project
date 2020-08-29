@@ -24,6 +24,7 @@ class GameMgr {
     this.portalSound.volume = 1/7;
     this.items = [];
     this.upgradesList = false;
+    this.isPaused = false
     this.boundaries = [window.innerWidth, window.innerHeight];
 
     window.onresize = () => this.boundaries = [window.innerWidth, window.innerHeight];
@@ -199,8 +200,27 @@ class GameMgr {
 toggleModal(modalID = "modal", requestedState){
 var modal = document.getElementById(modalID)
 modal.style.display = requestedState || modal.style.display == "flex"? "none" : "flex"
+this.togglePause()
 }
 
+togglePause(){
+if(!this.isPaused){
+this.isPaused = true
+this.player.stopMoving()
+for(var i = 0; i < this.enemies.length; i++ ){
+  this.enemies[i].toggleMoveTimer()
+}
+this.stopLoop()
+}
+else{
+this.isPaused = false
+for(var i = 0; i < this.enemies.length; i++ ){
+  this.enemies[i].toggleMoveTimer()
+}
+this.startLoop()
+}
+
+}
 
 
 
@@ -216,6 +236,7 @@ modal.style.display = requestedState || modal.style.display == "flex"? "none" : 
   clearInterval(this.enemies[x].moveTimer)
   }
 }
+
 // ^for testing purposes, delete when no longer needed^
 
 
