@@ -1,7 +1,7 @@
-function getUpgrades(gameMgr){
-$.get("/upgrades", (obj)=>{
-  gameMgr.upgradesList=( new UpgradesList(obj["upgrades"]));
-})
+function getUpgrades(gameMgr) {
+  $.get("/upgrades", (obj) => {
+    gameMgr.upgradesList = (new UpgradesList(obj["upgrades"]));
+  })
 }
 
 
@@ -21,7 +21,7 @@ class GameMgr {
     this.killCounter = 0;
     this.shownKillCounter = 0;
     this.portalSound = new Audio("audio/inception.mp3");
-    this.portalSound.volume = 1/7;
+    this.portalSound.volume = 1 / 7;
     this.items = [];
     this.upgradesList = false;
     this.isPaused = false
@@ -45,13 +45,13 @@ class GameMgr {
     this.sprites = [player];
     this.spritesHistory = [];
     this.enemies = [];
-    for(var x = 0; x < 3 + Math.floor(this.round/3) ; x++ ){
-    this.addGeneratedEnemy({
-      health:Enemy.getDefaultValues().health *Math.pow(1.05, this.round),
-      damage:Enemy.getDefaultValues().damage *Math.pow(1.05, this.round)
-    })
+    for (var x = 0; x < 3 + Math.floor(this.round / 3); x++) {
+      this.addGeneratedEnemy({
+        health: Enemy.getDefaultValues().health * Math.pow(1.05, this.round),
+        damage: Enemy.getDefaultValues().damage * Math.pow(1.05, this.round)
+      })
 
-//T
+      //T
 
     }
     this.ballistics = [];
@@ -77,8 +77,8 @@ class GameMgr {
   }
 
   startLoop() {
-    if(!this.isRunning()) {
-      this.drawLoop = setInterval(() => this.updateState(), 50/3);
+    if (!this.isRunning()) {
+      this.drawLoop = setInterval(() => this.updateState(), 50 / 3);
     }
   }
 
@@ -93,30 +93,30 @@ class GameMgr {
 
   updateState() {
     let player = this.player;
-    for(var i = 0; i < this.sprites.length; i++) {
+    for (var i = 0; i < this.sprites.length; i++) {
       //if(this.sprites[i].hasChanged(this.spritesHistory[i])) {
-        this.sprites[i].draw();
-        //let { x, y, rotation } = this.sprites[i];
-        //this.spritesHistory[i] = {x, y, rotation};
+      this.sprites[i].draw();
+      //let { x, y, rotation } = this.sprites[i];
+      //this.spritesHistory[i] = {x, y, rotation};
       //}
     }
-    for(let enemy of this.enemies) {
-      if(player.isColliding(enemy)) {
+    for (let enemy of this.enemies) {
+      if (player.isColliding(enemy)) {
         player.onCollide(enemy);
       }
-      for(let ballistic of this.ballistics) {
-        if(enemy.isColliding(ballistic)) {
+      for (let ballistic of this.ballistics) {
+        if (enemy.isColliding(ballistic)) {
           ballistic.onCollide(enemy)
         }
       }
     }
-    for(let location of this.locations) {
-      if(player.isColliding(location)) {
+    for (let location of this.locations) {
+      if (player.isColliding(location)) {
         location.onCollide(this)
       }
     }
-    for(let item of this.items) {
-      if(player.isColliding(item)) {
+    for (let item of this.items) {
+      if (player.isColliding(item)) {
         item.onCollide(this, player)
       }
     }
@@ -134,10 +134,11 @@ class GameMgr {
       health = Enemy.getDefaultValues().health,
       damage = Enemy.getDefaultValues().damage,
       boundaries = {
-      minLeft:0,
-      minTop:0,
-      maxLeft: window.innerWidth,
-      maxTop: window.innerHeight,}
+        minLeft: 0,
+        minTop: 0,
+        maxLeft: window.innerWidth,
+        maxTop: window.innerHeight,
+      }
     } = enemyOptions;
     let enemy = new Enemy(health, damage, x, y, this);
     enemy.setBoundaries(boundaries)
@@ -156,94 +157,97 @@ class GameMgr {
 
   addListeners(player) {
     const listeners = ["keydown", "keyup", "mousedown", "mouseup"];
-    listeners.map( listener => {
+    listeners.map(listener => {
       document.addEventListener(listener, (e) => player[listener](e));
     });
-    $("#backpackButton").on("click", ()=>{this.toggleModal()
+    $("#backpackButton").on("click", () => {
+      this.toggleModal()
       $("#backpackButton").blur()
     })
     var inventory = [...document.getElementById("cargoBay").children]
-      inventory.map( (item, index) =>{
-          item.addEventListener("click",
-            () => {player.backpack.equipItem(player.backpack.inventory[
-              item.getAttribute("itemIndex")])
-              this.fillCargoBay(player.backpack)
-            })
+    inventory.map((item, index) => {
+      item.addEventListener("click",
+        () => {
+          player.backpack.equipItem(player.backpack.inventory[
+            item.getAttribute("itemIndex")])
+          this.fillCargoBay(player.backpack)
+        })
 
 
-      } )
+    })
   }
-  removeBallistics(ballistic){
-  this.ballistics.splice(this.ballistics.indexOf(ballistic),1);
-  this.sprites.splice(this.sprites.indexOf(ballistic),1);
+  removeBallistics(ballistic) {
+    this.ballistics.splice(this.ballistics.indexOf(ballistic), 1);
+    this.sprites.splice(this.sprites.indexOf(ballistic), 1);
   }
-  updateKillCount(){
+  updateKillCount() {
     this.killCounter += 1;
-    this.shownKillCounter ++;
-    document.getElementById("killCounter").innerHTML = ": "+ this.shownKillCounter;
+    this.shownKillCounter++;
+    document.getElementById("killCounter").innerHTML = ": " + this.shownKillCounter;
     this.checkPortal();
   }
-  removeEnemies(enemy){
-  this.enemies.splice(this.enemies.indexOf(enemy),1);
-  this.sprites.splice(this.sprites.indexOf(enemy),1);
-  this.updateKillCount();
-}
-  removeItem(item){
-  this.items.splice(this.items.indexOf(item),1);
-  this.sprites.splice(this.sprites.indexOf(item),1);
-}
-  checkPortal(){
-  if(this.killCounter >= 3 && !this.locations[0].isVisible){
-    this.locations[0].setVisibility(true);
-    this.portalSound.play();
-    this.addGeneratedEnemy({
-      x : this.locations[0].x,
-      y : this.locations[0].y,
-      health : 200,
-      boundaries : {
-      minLeft:window.innerWidth*.75,
-      minTop:window.innerHeight/2,}
-}
-  )
+  removeEnemies(enemy) {
+    this.enemies.splice(this.enemies.indexOf(enemy), 1);
+    this.sprites.splice(this.sprites.indexOf(enemy), 1);
+    this.updateKillCount();
   }
-}
-toggleModal(modalID = "modal", requestedState){
-var modal = document.getElementById(modalID)
-modal.style.display = requestedState || modal.style.display == "flex"? "none" : "flex"
-this.togglePause()
-this.fillCargoBay(this.player.backpack)
-}
-
-fillCargoBay(cargo){
-$(".upgradeBox").html("")
-var inventoryBoxes = [...document.getElementsByClassName("upgradeBox")]
-var lst = cargo.inventory
-for(var i = 0; i < lst.length; i++){
-if(inventoryBoxes[i].className == "upgradeBox"){
-  inventoryBoxes[i].innerHTML = lst[i].name
-inventoryBoxes[i].setAttribute("itemIndex", i)
+  removeItem(item) {
+    this.items.splice(this.items.indexOf(item), 1);
+    this.sprites.splice(this.sprites.indexOf(item), 1);
   }
-}
+  checkPortal() {
+    if (this.killCounter >= 3 && !this.locations[0].isVisible) {
+      this.locations[0].setVisibility(true);
+      this.portalSound.play();
+      this.addGeneratedEnemy({
+        x: this.locations[0].x,
+        y: this.locations[0].y,
+        health: 200,
+        boundaries: {
+          minLeft: window.innerWidth * .75,
+          minTop: window.innerHeight / 2,
+        }
+      }
+      )
+    }
+  }
+  toggleModal(modalID = "modal", requestedState) {
+    var modal = document.getElementById(modalID)
+    modal.style.display = requestedState || modal.style.display == "flex" ? "none" : "flex"
+    this.togglePause()
+    this.fillCargoBay(this.player.backpack)
+  }
 
-}
-togglePause(){
-if(!this.isPaused){
-this.isPaused = true
-this.player.stopMoving()
-for(var i = 0; i < this.enemies.length; i++ ){
-  this.enemies[i].toggleMoveTimer()
-}
-this.stopLoop()
-}
-else{
-this.isPaused = false
-for(var i = 0; i < this.enemies.length; i++ ){
-  this.enemies[i].toggleMoveTimer()
-}
-this.startLoop()
-}
+  fillCargoBay(cargo) {
+    $(".upgradeBox").html("")
+    var inventoryBoxes = [...document.getElementsByClassName("upgradeBox")]
+    var lst = cargo.inventory
+    for (var i = 0; i < lst.length; i++) {
+      if (inventoryBoxes[i].className == "upgradeBox") {
+        inventoryBoxes[i].innerHTML = lst[i].name
+        inventoryBoxes[i].setAttribute("itemIndex", i)
+      }
+    }
 
-}
+  }
+  togglePause() {
+    if (!this.isPaused) {
+      this.isPaused = true
+      this.player.stopMoving()
+      for (var i = 0; i < this.enemies.length; i++) {
+        this.enemies[i].toggleMoveTimer()
+      }
+      this.stopLoop()
+    }
+    else {
+      this.isPaused = false
+      for (var i = 0; i < this.enemies.length; i++) {
+        this.enemies[i].toggleMoveTimer()
+      }
+      this.startLoop()
+    }
+
+  }
 
 
 
@@ -254,16 +258,16 @@ this.startLoop()
   // enemies[0].delete(gameMgr)
   // }
 
-  stopMoving(){
-  for(var x = 0; x < this.enemies.length; x++){
-  clearInterval(this.enemies[x].moveTimer)
+  stopMoving() {
+    for (var x = 0; x < this.enemies.length; x++) {
+      clearInterval(this.enemies[x].moveTimer)
+    }
   }
+
+  // ^for testing purposes, delete when no longer needed^
+
+
+
+
+
 }
-
-// ^for testing purposes, delete when no longer needed^
-
-
-
-
-
-  }
