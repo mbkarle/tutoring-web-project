@@ -162,6 +162,16 @@ class GameMgr {
     $("#backpackButton").on("click", ()=>{this.toggleModal()
       $("#backpackButton").blur()
     })
+    var inventory = [...document.getElementById("cargoBay").children]
+      inventory.map( (item, index) =>{
+          item.addEventListener("click",
+            () => {player.backpack.equipItem(player.backpack.inventory[
+              item.getAttribute("itemIndex")])
+              this.fillCargoBay(player.backpack)
+            })
+
+
+      } )
   }
   removeBallistics(ballistic){
   this.ballistics.splice(this.ballistics.indexOf(ballistic),1);
@@ -201,8 +211,21 @@ toggleModal(modalID = "modal", requestedState){
 var modal = document.getElementById(modalID)
 modal.style.display = requestedState || modal.style.display == "flex"? "none" : "flex"
 this.togglePause()
+this.fillCargoBay(this.player.backpack)
 }
 
+fillCargoBay(cargo){
+$(".upgradeBox").html("")
+var inventoryBoxes = [...document.getElementsByClassName("upgradeBox")]
+var lst = cargo.inventory
+for(var i = 0; i < lst.length; i++){
+if(inventoryBoxes[i].className == "upgradeBox"){
+  inventoryBoxes[i].innerHTML = lst[i].name
+inventoryBoxes[i].setAttribute("itemIndex", i)
+  }
+}
+
+}
 togglePause(){
 if(!this.isPaused){
 this.isPaused = true

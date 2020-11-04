@@ -6,6 +6,7 @@ this.owner = owner
 this.capacity = capacity
 this.icon = icon
 this.inventory = []
+this.gui = document.getElementById("cargoBay")
 this.equippedItems = {
   "Hull":[],
   "Engine":[],
@@ -60,7 +61,7 @@ static  makeUpgrade(data){
 }
 static makeRandomUpgrade(dataList){
 var chosenUpgrade = randomInt(0, dataList.length)
-return makeUpgrade(dataList[chosenUpgrade])
+return UpgradesList.makeUpgrade(dataList[chosenUpgrade])
 }
 filterBy(field, value){
 var filteredList = []
@@ -100,6 +101,18 @@ var item1 = lst[index1]
 lst[index1] = lst[index2]
 lst[index2] = item1
 }
+priceBubbleSort(){
+var sortedList = []
+while(this.list.length > 0){
+var mostExpensive = this.getMostExpensive()
+this.list.splice(this.list.indexOf(mostExpensive), 1)
+sortedList.push(mostExpensive)
+}
+this.list = sortedList
+return this.list
+}
+
+
 // fancyFilter(field, value){
 // return this.list.filter((obj)=>this.list[i][field] === value)
 // }
